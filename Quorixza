@@ -1,0 +1,3865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quorix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #F6F8F5;
+    --ink: #16201C;
+    --ink-soft: #4B5750;
+    --accent: #2F6F5E;
+    --accent-soft: #DCE7E1;
+    --line: #CBD6CF;
+    --surface: #FFFFFF;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101511;
+      --ink: #EAF0EA;
+      --ink-soft: #9BAAA1;
+      --accent: #6FBFA3;
+      --accent-soft: #1B2620;
+      --line: #2A342E;
+      --surface: #161C18;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #101511;
+    --ink: #EAF0EA;
+    --ink-soft: #9BAAA1;
+    --accent: #6FBFA3;
+    --accent-soft: #1B2620;
+    --line: #2A342E;
+    --surface: #161C18;
+  }
+
+  :root[data-theme="midnight"] {
+    --bg: #070A12;
+    --ink: #EEF2FF;
+    --ink-soft: #98A4C2;
+    --accent: #7C8CFF;
+    --accent-soft: #151B36;
+    --line: #27304D;
+    --surface: #0E1322;
+  }
+
+  :root[data-theme="ocean"] {
+    --bg: #061218;
+    --ink: #E8FBFF;
+    --ink-soft: #8DB7C4;
+    --accent: #27C7D9;
+    --accent-soft: #0D2A31;
+    --line: #1B414A;
+    --surface: #0B1B22;
+  }
+
+  :root[data-theme="purple"] {
+    --bg: #100A18;
+    --ink: #F6EEFF;
+    --ink-soft: #B8A8C9;
+    --accent: #B77CFF;
+    --accent-soft: #27153B;
+    --line: #40275A;
+    --surface: #181021;
+  }
+
+  :root[data-theme="sunset"] {
+    --bg: #19100E;
+    --ink: #FFF3EB;
+    --ink-soft: #C9AFA2;
+    --accent: #FF9A5A;
+    --accent-soft: #3B2117;
+    --line: #5A3326;
+    --surface: #241613;
+  }
+
+  :root[data-theme="rose"] {
+    --bg: #190D13;
+    --ink: #FFF0F5;
+    --ink-soft: #CBA9B6;
+    --accent: #FF6F9F;
+    --accent-soft: #3A1525;
+    --line: #5B283D;
+    --surface: #24121B;
+  }
+
+  :root[data-theme="forest"] {
+    --bg: #08130E;
+    --ink: #ECFBEF;
+    --ink-soft: #9CB9A5;
+    --accent: #67D48A;
+    --accent-soft: #153322;
+    --line: #294D36;
+    --surface: #0E1D14;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  html {
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    min-height: 100%;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  .grid-veil {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.35;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 100vh;
+    padding: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  main {
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mark {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--accent);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: clamp(32px, 6vw, 44px);
+    line-height: 1.15;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .sub {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    line-height: 1.6;
+    max-width: 42ch;
+    margin: 0 0 40px;
+  }
+
+  form.search {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 2px rgba(20,30,25,0.04);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  form.search:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  form.search svg {
+    flex-shrink: 0;
+    color: var(--ink-soft);
+  }
+
+  form.search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 16px;
+    color: var(--ink);
+  }
+
+  form.search input::placeholder {
+    color: var(--ink-soft);
+  }
+
+  form.search button {
+    border: none;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 9px 16px;
+    border-radius: 9px;
+    cursor: pointer;
+  }
+
+  form.search button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .traits {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .trait {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px 12px;
+  }
+
+  .hint {
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  .hint code {
+    background: var(--accent-soft);
+    padding: 2px 6px;
+    border-radius: 5px;
+  }
+
+  .hint a.quicklink {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .hint a.quicklink:hover code {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  #browser {
+    display: none;
+    flex-direction: column;
+    height: 100vh;
+    position: relative;
+    z-index: 1;
+    padding-top: 52px;
+  }
+
+  #home {
+    position: relative;
+    z-index: 1;
+    padding-top: 52px;
+  }
+
+  .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 20px 14px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Browser tabs */
+  .tabs-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    padding: 7px 170px 0 12px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    min-height: 45px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  }
+
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 145px;
+    max-width: 230px;
+    height: 36px;
+    padding: 0 7px 0 12px;
+    border: 1px solid var(--line);
+    border-bottom: none;
+    border-radius: 9px 9px 0 0;
+    background: var(--surface);
+    color: var(--ink-soft);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .tab.active {
+    color: var(--ink);
+    border-color: var(--accent);
+    box-shadow: 0 -1px 0 var(--accent) inset;
+  }
+
+  .tab-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12.5px;
+  }
+
+  .tab-close {
+    width: 22px;
+    height: 22px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .tab-close:hover {
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
+
+  .new-tab-btn {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 32px;
+    margin: 0 0 4px 2px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+  .new-tab-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* Top-right settings menu */
+  .settings-dock {
+    position: fixed;
+    top: 7px;
+    right: 12px;
+    z-index: 140;
+  }
+
+  .settings-toggle {
+    height: 34px;
+    padding: 0 13px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,.08);
+    transition: .15s ease;
+  }
+
+  .settings-toggle:hover,
+  .settings-toggle.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .settings-overlay,
+  .history-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 135;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0,0,0,.34);
+    backdrop-filter: blur(5px);
+  }
+
+  .settings-overlay.open,
+  .history-overlay.open {
+    display: flex;
+  }
+
+  .settings-menu {
+    width: min(440px,calc(100vw - 28px));
+    max-height: min(78vh,620px);
+    overflow: auto;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.24);
+  }
+
+  .settings-menu-head,
+  .history-menu-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .settings-menu h4,
+  .history-menu h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .settings-close {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: transparent;
+    color: var(--ink);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .settings-close:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .settings-menu p {
+    margin: 0 0 14px;
+    color: var(--ink-soft);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  /* History settings button */
+  .settings-history-section {
+    margin-bottom: 16px;
+  }
+
+  .history-settings-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 13px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--ink);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: .15s ease;
+  }
+
+  .history-settings-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    transform: translateY(-1px);
+  }
+
+  .history-settings-btn strong {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .history-settings-btn small {
+    display: block;
+    margin-top: 3px;
+    color: var(--ink-soft);
+    font-size: 11px;
+  }
+
+  .history-settings-btn > span:last-child {
+    font-size: 22px;
+    color: var(--ink-soft);
+  }
+
+  .theme-options {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 8px;
+  }
+
+  .theme-option {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px 12px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: transparent;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: .15s ease;
+  }
+
+  .theme-option:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .theme-option.active {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .theme-check {
+    opacity: .35;
+    font-weight: 600;
+  }
+
+  .theme-option.active .theme-check {
+    opacity: 1;
+    color: var(--accent);
+  }
+
+  /* ---------- History window ---------- */
+  .history-menu {
+    width: min(620px,calc(100vw - 28px));
+    max-height: min(80vh,680px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 24px 70px rgba(0,0,0,.28);
+  }
+
+  .history-menu-head {
+    margin-bottom: 12px;
+  }
+
+  .history-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .history-clear {
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 8px 11px;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .history-clear:hover {
+    border-color: #d65b5b;
+    color: #d65b5b;
+    background: rgba(214,91,91,.08);
+  }
+
+  .history-list {
+    overflow-y: auto;
+    display: grid;
+    gap: 7px;
+    padding-right: 3px;
+  }
+
+  .history-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    transition: .15s ease;
+  }
+
+  .history-item:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .history-icon {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 14px;
+  }
+
+  .history-info {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .history-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .history-url {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 2px;
+    color: var(--ink-soft);
+    font-size: 11px;
+  }
+
+  .history-time {
+    flex: 0 0 auto;
+    color: var(--ink-soft);
+    font-size: 10px;
+  }
+
+  .history-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 13px;
+  }
+
+  /* ---------- QuorixTube ---------- */
+  .qtube {
+    display: none;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .qt-account {
+    max-width: 360px;
+    margin: 60px auto;
+    padding: 28px;
+    text-align: center;
+  }
+
+  .qt-account .qt-logo-lg {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+
+  .qt-account h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 20px;
+    margin: 0 0 6px;
+  }
+
+  .qt-account p {
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    margin: 0 0 20px;
+  }
+
+  .qt-field {
+    text-align: left;
+    margin-bottom: 14px;
+  }
+
+  .qt-field label {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+  }
+
+  .qt-field input {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 9px 11px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--surface);
+  }
+
+  .qt-field input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .qt-primary-btn {
+    width: 100%;
+    border: none;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 11px;
+    border-radius: 9px;
+    cursor: pointer;
+  }
+
+  .qtube-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--surface);
+  }
+
+  .qtube-head .qt-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .qtube-head .qt-logo svg {
+    fill: var(--bg);
+  }
+
+  .qtube-head h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    margin: 0;
+  }
+
+  .qtube-head span {
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .qt-channel-controls {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .qt-nav-btn,
+  .qt-studio-btn {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .qt-nav-btn.active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--ink);
+  }
+
+  .qt-nav-btn:hover,
+  .qt-studio-btn:hover {
+    border-color: var(--accent);
+  }
+
+  .qt-view {
+    display: none;
+  }
+
+  .qt-view.active {
+    display: block;
+  }
+
+  .qt-search-panel {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .qt-searchbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .qt-searchbar input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 11px 13px;
+    font: inherit;
+    color: var(--ink);
+    background: var(--surface);
+  }
+
+  .qt-searchbar input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .qt-searchbar button {
+    border: none;
+    background: var(--accent);
+    color: var(--bg);
+    border-radius: 10px;
+    padding: 0 15px;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .qt-search-results {
+    display: grid;
+    gap: 14px;
+  }
+
+  .qt-search-card {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 14px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+  }
+
+  .qt-search-card video,
+  .qt-search-thumb-empty {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 9px;
+    background: #000;
+    object-fit: cover;
+  }
+
+  .qt-search-info {
+    padding: 4px 2px;
+  }
+
+  .qt-search-info .qt-title {
+    font-size: 15px;
+  }
+
+  .qt-search-info .qt-meta {
+    margin-top: 4px;
+  }
+
+  .qt-body {
+    padding: 24px 28px 34px;
+  }
+
+  .qt-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+    gap: 20px;
+  }
+
+  .qt-card video {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 10px;
+    background: #000;
+    margin-bottom: 8px;
+  }
+
+  .qt-thumb-empty {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    color: var(--ink-soft);
+    font-size: 12px;
+    text-align: center;
+    padding: 10px;
+  }
+
+  .qt-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.35;
+    margin: 0 0 2px;
+  }
+
+  .qt-meta {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .qt-overlay {
+    position: fixed;
+    inset: 45px 0 0 0;
+    background: rgba(16,21,17,0.35);
+    display: none;
+    align-items: stretch;
+    justify-content: flex-end;
+    z-index: 120;
+    padding: 0;
+  }
+
+  .qt-overlay.open {
+    display: flex;
+  }
+
+  .qt-studio-panel {
+    width: min(430px,100%);
+    max-height: calc(100vh - 45px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+    height: 100%;
+    min-height: 0;
+    background: var(--surface);
+    border-left: 1px solid var(--line);
+    padding: 20px 20px calc(18px + env(safe-area-inset-bottom, 0px));
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  .qt-studio-panel h3 {
+    flex-shrink: 0;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 19px;
+    margin: 0 0 2px;
+  }
+
+  .qt-studio-panel .qt-note {
+    flex-shrink: 0;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 0 0 6px;
+  }
+
+  .qt-studio-panel .qt-field {
+    flex-shrink: 0;
+  }
+
+  .qt-studio-panel textarea,
+  .qt-studio-panel input {
+    max-width: 100%;
+  }
+
+  .qt-file-drop {
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .qt-file-drop:hover {
+    border-color: var(--accent);
+  }
+
+  .qt-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 8px;
+    position: sticky;
+    bottom: 0;
+    background: var(--surface);
+  }
+
+  .qt-actions button {
+    flex: 1;
+    border: none;
+    border-radius: 9px;
+    padding: 11px;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .qt-publish-btn {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  .qt-cancel-btn {
+    background: transparent;
+    border: 1px solid var(--line) !important;
+    color: var(--ink);
+  }
+
+  /* Save system */
+  .save-dock {
+    position: fixed;
+    left: 18px;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    z-index: 50;
+    font-size: 12px;
+    color: var(--ink);
+  }
+
+  .save-toggle {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: 11px;
+    padding: 10px 13px;
+    cursor: pointer;
+    font: inherit;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    transition: .18s ease;
+  }
+
+  .save-toggle:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  .save-panel {
+    width: 220px;
+    margin-top: 8px;
+    padding: 12px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 14px 34px rgba(0,0,0,.18);
+    display: none;
+    gap: 8px;
+  }
+
+  .save-dock.open .save-panel {
+    display: grid;
+  }
+
+  .save-panel h4 {
+    margin: 0 0 2px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .save-panel p {
+    margin: 0 0 4px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  .save-action {
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 9px 10px;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+  }
+
+  .save-action:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .save-status {
+    min-height: 16px;
+    color: var(--ink-soft);
+    font-size: 11px;
+  }
+
+  .save-import-input {
+    display: none;
+  }
+
+  @media (max-width: 680px) {
+    .qtube-head {
+      align-items: flex-start;
+      flex-wrap: wrap;
+      padding: 14px 16px;
+    }
+
+    .qt-channel-controls {
+      width: 100%;
+      margin-left: 0;
+      justify-content: flex-start;
+    }
+
+    .qt-body {
+      padding: 18px 16px 28px;
+    }
+
+    .qt-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .qt-search-card {
+      grid-template-columns: 1fr;
+    }
+
+    .qt-studio-panel {
+      width: 100%;
+      border-left: none;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .theme-options {
+      grid-template-columns: 1fr;
+    }
+
+    .settings-overlay,
+    .history-overlay {
+      padding: 14px;
+    }
+
+    .settings-menu,
+    .history-menu {
+      max-height: 84vh;
+      padding: 16px;
+    }
+
+    .history-time {
+      display: none;
+    }
+  }
+
+  footer {
+    position: fixed;
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-soft);
+    opacity: 0.75;
+    z-index: 1;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="grid-veil"></div>
+
+<!-- SETTINGS BUTTON -->
+<div class="settings-dock" id="settingsDock">
+  <button class="settings-toggle" id="settingsToggle" type="button" aria-expanded="false">
+    ⚙ Settings
+  </button>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings-overlay" id="settingsOverlay" aria-hidden="true">
+  <div class="settings-menu" role="dialog" aria-modal="true" aria-labelledby="settingsMenuTitle">
+
+    <div class="settings-menu-head">
+      <h4 id="settingsMenuTitle">Settings</h4>
+      <button class="settings-close" id="settingsClose" type="button" aria-label="Close settings">×</button>
+    </div>
+
+    <p>Choose how Quorix looks. Your theme is saved in this browser.</p>
+
+    <!-- HISTORY BUTTON -->
+    <div class="settings-history-section">
+      <button class="history-settings-btn" id="historySettingsBtn" type="button">
+        <span>
+          <strong>🕘 History</strong>
+          <small>View your recent searches and websites</small>
+        </span>
+        <span>›</span>
+      </button>
+    </div>
+
+    <div class="theme-options" role="group" aria-label="Theme">
+      <button class="theme-option" type="button" data-theme-choice="system">
+        <span>System</span><span class="theme-check">✓</span>
+      </button>
+
+      <button class="theme-option" type="button" data-theme-choice="light">
+        <span>Light</span><span class="theme-check">✓</span>
+      </button>
+
+      <button class="theme-option" type="button" data-theme-choice="dark">
+        <span>Dark</span><span class="theme-check">✓</span>
+      </button>
+
+      <button class="theme-option" type="button" data-theme-choice="midnight">
+        <span>Midnight</span><span class="theme-check">✓</span>
+      </button>
+
+      <button class="theme-option" type="button" data-theme-choice="ocean">
+        <span>Ocean</span><span class="theme-check">✓</span>
+      </button>
+
+      <button class="theme-option" type="button" data-theme-choice="purple">
+        <span>Purple</span><span class="theme-check">✓</span>
+      </button>
+
+      <button class="theme-option" type="button" data-theme-choice="sunset">
+        <span>Sunset</span><span class="theme-check">✓</span>
+      </button>
+
+      <button class="theme-option" type="button" data-theme-choice="rose">
+        <span>Rose</span><span class="theme-check">✓</span>
+      </button>
+
+      <button class="theme-option" type="button" data-theme-choice="forest">
+        <span>Forest</span><span class="theme-check">✓</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div class="history-overlay" id="historyOverlay" aria-hidden="true">
+
+  <div class="history-menu" role="dialog" aria-modal="true" aria-labelledby="historyTitle">
+
+    <div class="history-menu-head">
+      <h4 id="historyTitle">History</h4>
+
+      <button class="settings-close" id="historyClose" type="button" aria-label="Close history">
+        ×
+      </button>
+    </div>
+
+    <div class="history-actions">
+      <button class="history-clear" id="clearHistoryBtn" type="button">
+        Clear history
+      </button>
+    </div>
+
+    <div class="history-list" id="historyList"></div>
+
+  </div>
+</div>
+
+<!-- SAVE -->
+<div class="save-dock" id="saveDock">
+
+  <button class="save-toggle" id="saveToggle" type="button" aria-expanded="false">
+    Save
+  </button>
+
+  <div class="save-panel" aria-label="Save and import settings">
+
+    <h4>Save System</h4>
+
+    <p>
+      Export your Quorix tabs and local data as JSON, then import it later.
+    </p>
+
+    <button class="save-action" id="exportSaveBtn" type="button">
+      Export JSON
+    </button>
+
+    <button class="save-action" id="importSaveBtn" type="button">
+      Import JSON
+    </button>
+
+    <input
+      class="save-import-input"
+      id="importSaveInput"
+      type="file"
+      accept="application/json,.json"
+    >
+
+    <div class="save-status" id="saveStatus" aria-live="polite"></div>
+
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="home">
+
+  <main>
+
+    <div class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path
+          d="M9 1L16.5 5.5V12.5L9 17L1.5 12.5V5.5L9 1Z"
+          stroke="currentColor"
+          stroke-width="1.3"
+        />
+        <circle
+          cx="9"
+          cy="9"
+          r="2.6"
+          stroke="currentColor"
+          stroke-width="1.3"
+        />
+      </svg>
+      QUORIX
+    </div>
+
+    <h1>Welcome to Quorix</h1>
+
+    <p class="sub">
+      A browser built to run light and answer straight — no hidden trackers,
+      no bloated processes, no black-box results.
+    </p>
+
+    <form class="search" id="searchForm">
+
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <circle
+          cx="8"
+          cy="8"
+          r="6"
+          stroke="currentColor"
+          stroke-width="1.4"
+        />
+        <path
+          d="M12.5 12.5L16.5 16.5"
+          stroke="currentColor"
+          stroke-width="1.4"
+          stroke-linecap="round"
+        />
+      </svg>
+
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Ask Quorix Transparently"
+        autofocus
+        aria-label="Ask Quorix or enter a link"
+      >
+
+      <button type="submit">Go</button>
+
+    </form>
+
+    <p class="hint" id="navStatus" aria-live="polite"></p>
+
+    <div class="traits">
+      <span class="trait">Low-memory engine</span>
+      <span class="trait">Shows its sources</span>
+      <span class="trait">No ad-tech tracking</span>
+    </div>
+
+    <p class="hint">
+      Type a question, or a link to open it inside Quorix — try:
+
+      <a href="#" class="quicklink" data-url="wikipedia.org">
+        <code>wikipedia.org</code>
+      </a>,
+
+      <a href="#" class="quicklink" data-url="example.com">
+        <code>example.com</code>
+      </a>,
+
+      <a href="#" class="quicklink" data-url="quarktion.quorix">
+        <code>quarktion.quorix</code>
+      </a>
+    </p>
+
+  </main>
+
+  <footer>Quorix — v1.9</footer>
+
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar" id="tabsBar" aria-label="Browser tabs">
+
+  <button
+    class="new-tab-btn"
+    id="newTabBtn"
+    type="button"
+    title="New tab"
+  >
+    +
+  </button>
+
+</div>
+
+<!-- BROWSER -->
+<div id="browser">
+
+  <div class="browser-bar">
+
+    <button class="nav-btn" id="backBtn" aria-label="Back to start">
+
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+        <path
+          d="M9.5 3L4 7.5L9.5 12"
+          stroke="currentColor"
+          stroke-width="1.4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+
+    </button>
+
+    <div class="addr">
+      <span id="addrText"></span>
+
+      <a
+        id="openNewTab"
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open ↗
+      </a>
+    </div>
+
+  </div>
+
+  <div class="frame-wrap">
+
+    <iframe
+      id="siteFrame"
+      title="Embedded site"
+      referrerpolicy="no-referrer"
+    ></iframe>
+
+    <div class="frame-note" id="frameNote"></div>
+
+    <!-- QUARKTION -->
+    <div class="qtube" id="qtube">
+
+      <div class="qt-account" id="qtAccount">
+
+        <div class="qt-logo-lg">
+          <svg width="18" height="18" viewBox="0 0 18 18">
+            <path
+              d="M5 3L15 9L5 15V3Z"
+              fill="var(--bg)"
+            />
+          </svg>
+        </div>
+
+        <h2>Create your Quarktion account</h2>
+
+        <p>
+          Pick a channel name to start publishing on QuorixTube.
+          This stays in your own browser only.
+        </p>
+
+        <div class="qt-field">
+
+          <label for="qtChannelInput">
+            Channel name
+          </label>
+
+          <input
+            type="text"
+            id="qtChannelInput"
+            placeholder="e.g. Quorix Labs"
+            maxlength="40"
+          >
+
+        </div>
+
+        <button class="qt-primary-btn" id="qtCreateAccount">
+          Create channel
+        </button>
+
+      </div>
+
+      <div id="qtChannel" style="display:none;">
+
+        <div class="qtube-head">
+
+          <div class="qt-logo">
+            <svg width="15" height="15" viewBox="0 0 15 15">
+              <path d="M4 2.5L12 7.5L4 12.5V2.5Z"/>
+            </svg>
+          </div>
+
+          <div>
+            <h2 id="qtChannelName"></h2>
+            <span>Your Quarktion channel</span>
+          </div>
+
+          <div class="qt-channel-controls">
+
+            <button class="qt-nav-btn active" id="qtVideosTab">
+              Videos
+            </button>
+
+            <button class="qt-nav-btn" id="qtSearchTab">
+              Search videos
+            </button>
+
+            <button class="qt-studio-btn" id="openStudio">
+
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path
+                  d="M7 2.5V11.5M2.5 7H11.5"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                />
+              </svg>
+
+              Quarktion Studio
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="qt-body">
+
+          <div class="qt-view active" id="qtVideosView">
+
+            <div class="qt-grid" id="qtGrid"></div>
+
+            <p class="hint" id="qtEmpty">
+              No videos yet — open Quarktion Studio to publish your first one.
+            </p>
+
+          </div>
+
+          <div class="qt-view" id="qtSearchView">
+
+            <div class="qt-search-panel">
+
+              <form class="qt-searchbar" id="qtSearchForm">
+
+                <input
+                  id="qtSearchInput"
+                  type="search"
+                  placeholder="Search Quarktion videos..."
+                  autocomplete="off"
+                >
+
+                <button type="submit">
+                  Search
+                </button>
+
+              </form>
+
+              <div
+                class="qt-search-results"
+                id="qtSearchResults"
+              ></div>
+
+              <p class="hint" id="qtSearchEmpty">
+                Enter a search to find videos.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- QUARKTION STUDIO -->
+<div class="qt-overlay" id="qtOverlay">
+
+  <div
+    class="qt-studio-panel"
+    role="dialog"
+    aria-label="Quarktion Studio"
+  >
+
+    <h3>Quarktion Studio</h3>
+
+    <p class="qt-note">
+      Pick a video file and give it a title to publish it to your channel.
+      Playback only works for the rest of this browser session — saving the
+      actual video file permanently needs real server storage, which this
+      prototype doesn't have yet.
+    </p>
+
+    <div class="qt-field">
+
+      <label for="qtTitleInput">
+        Title
+      </label>
+
+      <input
+        type="text"
+        id="qtTitleInput"
+        placeholder="Give your video a title"
+        maxlength="100"
+      >
+
+    </div>
+
+    <div class="qt-field">
+
+      <label>
+        Video file
+      </label>
+
+      <div class="qt-file-drop" id="qtFileDrop">
+
+        Click to choose a video file
+
+        <br>
+
+        <span
+          id="qtFileName"
+          style="color:var(--ink-soft);"
+        ></span>
+
+      </div>
+
+      <input
+        type="file"
+        id="qtFileInput"
+        accept="video/*"
+        style="display:none;"
+      >
+
+    </div>
+
+    <div class="qt-actions">
+
+      <button class="qt-cancel-btn" id="qtCancel">
+        Cancel
+      </button>
+
+      <button class="qt-publish-btn" id="qtPublish">
+        Publish
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/* =========================================================
+   BASIC ELEMENTS
+========================================================= */
+
+const home = document.getElementById('home');
+const browserView = document.getElementById('browser');
+
+const searchForm = document.getElementById('searchForm');
+const searchInput = document.getElementById('searchInput');
+
+const addrText = document.getElementById('addrText');
+const openNewTab = document.getElementById('openNewTab');
+
+openNewTab.target = '_blank';
+openNewTab.rel = 'noopener noreferrer';
+
+const siteFrame = document.getElementById('siteFrame');
+const frameNote = document.getElementById('frameNote');
+
+const backBtn = document.getElementById('backBtn');
+const navStatus = document.getElementById('navStatus');
+
+
+/* =========================================================
+   URL DETECTION
+========================================================= */
+
+function looksLikeUrl(v) {
+
+  const s = v.trim();
+
+  if (/^https?:\/\//i.test(s)) {
+    return true;
+  }
+
+  return /^[a-z0-9-]+(\.[a-z0-9-]+)+([/?#].*)?$/i.test(s)
+    && !s.includes(' ');
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+const historySettingsBtn =
+  document.getElementById('historySettingsBtn');
+
+const historyOverlay =
+  document.getElementById('historyOverlay');
+
+const historyClose =
+  document.getElementById('historyClose');
+
+const historyList =
+  document.getElementById('historyList');
+
+const clearHistoryBtn =
+  document.getElementById('clearHistoryBtn');
+
+let quorixHistory = [];
+
+
+function loadHistory() {
+
+  try {
+
+    const saved =
+      localStorage.getItem('quorix_history');
+
+    quorixHistory =
+      saved ? JSON.parse(saved) : [];
+
+    if (!Array.isArray(quorixHistory)) {
+      quorixHistory = [];
+    }
+
+  } catch {
+
+    quorixHistory = [];
+
+  }
+
+}
+
+
+function saveHistory() {
+
+  try {
+
+    localStorage.setItem(
+      'quorix_history',
+      JSON.stringify(quorixHistory)
+    );
+
+  } catch {}
+
+}
+
+
+function addHistory(value) {
+
+  value = String(value || '').trim();
+
+  if (!value) return;
+
+  if (value === 'about:blank') return;
+
+  const title = tabTitle(value);
+
+  /* Remove duplicate */
+  quorixHistory =
+    quorixHistory.filter(item => item.url !== value);
+
+  /* Add newest item at the top */
+  quorixHistory.unshift({
+
+    title: title,
+
+    url: value,
+
+    time: Date.now()
+
+  });
+
+  /* Keep maximum of 100 items */
+  quorixHistory =
+    quorixHistory.slice(0, 100);
+
+  saveHistory();
+
+}
+
+
+function formatHistoryTime(timestamp) {
+
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  const diff = now - date;
+
+  if (diff < 60 * 1000) {
+    return 'Just now';
+  }
+
+  if (diff < 60 * 60 * 1000) {
+
+    return Math.floor(
+      diff / (60 * 1000)
+    ) + 'm ago';
+
+  }
+
+  if (diff < 24 * 60 * 60 * 1000) {
+
+    return Math.floor(
+      diff / (60 * 60 * 1000)
+    ) + 'h ago';
+
+  }
+
+  if (diff < 7 * 24 * 60 * 60 * 1000) {
+
+    return Math.floor(
+      diff / (24 * 60 * 60 * 1000)
+    ) + 'd ago';
+
+  }
+
+  return date.toLocaleDateString();
+
+}
+
+
+function renderHistory() {
+
+  if (!quorixHistory.length) {
+
+    historyList.innerHTML = `
+
+      <div class="history-empty">
+
+        <div style="font-size:28px;margin-bottom:10px;">
+          🕘
+        </div>
+
+        No browsing history yet.
+
+        <br>
+
+        Websites and searches you use in Quorix
+        will appear here.
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  historyList.innerHTML = '';
+
+  quorixHistory.forEach(item => {
+
+    const button =
+      document.createElement('button');
+
+    button.type = 'button';
+
+    button.className = 'history-item';
+
+
+    const icon =
+      document.createElement('div');
+
+    icon.className = 'history-icon';
+
+    icon.textContent =
+      looksLikeUrl(item.url)
+        ? '↗'
+        : '⌕';
+
+
+    const info =
+      document.createElement('div');
+
+    info.className = 'history-info';
+
+
+    const title =
+      document.createElement('div');
+
+    title.className = 'history-title';
+
+    title.textContent =
+      item.title || item.url;
+
+
+    const url =
+      document.createElement('div');
+
+    url.className = 'history-url';
+
+    url.textContent = item.url;
+
+
+    info.appendChild(title);
+    info.appendChild(url);
+
+
+    const time =
+      document.createElement('div');
+
+    time.className = 'history-time';
+
+    time.textContent =
+      formatHistoryTime(item.time);
+
+
+    button.appendChild(icon);
+    button.appendChild(info);
+    button.appendChild(time);
+
+
+    button.addEventListener('click', () => {
+
+      setHistoryMenu(false);
+
+      searchInput.value = item.url;
+
+      navigate(item.url);
+
+    });
+
+
+    historyList.appendChild(button);
+
+  });
+
+}
+
+
+function setHistoryMenu(open) {
+
+  historyOverlay.classList.toggle(
+    'open',
+    open
+  );
+
+  historyOverlay.setAttribute(
+    'aria-hidden',
+    String(!open)
+  );
+
+  if (open) {
+
+    renderHistory();
+
+    historyClose.focus();
+
+  }
+
+}
+
+
+/* History button */
+
+historySettingsBtn.addEventListener(
+  'click',
+  () => {
+
+    setSettingsMenu(false);
+
+    setHistoryMenu(true);
+
+  }
+);
+
+
+/* Close */
+
+historyClose.addEventListener(
+  'click',
+  () => setHistoryMenu(false)
+);
+
+
+/* Click outside */
+
+historyOverlay.addEventListener(
+  'click',
+  e => {
+
+    if (e.target === historyOverlay) {
+
+      setHistoryMenu(false);
+
+    }
+
+  }
+);
+
+
+/* Clear history */
+
+clearHistoryBtn.addEventListener(
+  'click',
+  () => {
+
+    if (!quorixHistory.length) {
+      return;
+    }
+
+    const confirmed =
+      confirm(
+        'Clear all Quorix browsing history?'
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    quorixHistory = [];
+
+    saveHistory();
+
+    renderHistory();
+
+  }
+);
+
+
+/* Escape */
+
+document.addEventListener(
+  'keydown',
+  e => {
+
+    if (
+      e.key === 'Escape' &&
+      historyOverlay.classList.contains('open')
+    ) {
+
+      setHistoryMenu(false);
+
+    }
+
+  }
+);
+
+
+/* Load history immediately */
+
+loadHistory();
+
+
+/* =========================================================
+   QUARKTION / QUORIXTUBE
+========================================================= */
+
+const qtube =
+  document.getElementById('qtube');
+
+const qtAccount =
+  document.getElementById('qtAccount');
+
+const qtChannel =
+  document.getElementById('qtChannel');
+
+const qtChannelInput =
+  document.getElementById('qtChannelInput');
+
+const qtChannelName =
+  document.getElementById('qtChannelName');
+
+const qtGrid =
+  document.getElementById('qtGrid');
+
+const qtEmpty =
+  document.getElementById('qtEmpty');
+
+const qtOverlay =
+  document.getElementById('qtOverlay');
+
+const qtFileDrop =
+  document.getElementById('qtFileDrop');
+
+const qtFileInput =
+  document.getElementById('qtFileInput');
+
+const qtFileName =
+  document.getElementById('qtFileName');
+
+const qtTitleInput =
+  document.getElementById('qtTitleInput');
+
+const qtVideosTab =
+  document.getElementById('qtVideosTab');
+
+const qtSearchTab =
+  document.getElementById('qtSearchTab');
+
+const qtVideosView =
+  document.getElementById('qtVideosView');
+
+const qtSearchView =
+  document.getElementById('qtSearchView');
+
+const qtSearchForm =
+  document.getElementById('qtSearchForm');
+
+const qtSearchInput =
+  document.getElementById('qtSearchInput');
+
+const qtSearchResults =
+  document.getElementById('qtSearchResults');
+
+const qtSearchEmpty =
+  document.getElementById('qtSearchEmpty');
+
+
+let qtChannelData = null;
+
+let qtVideos = [];
+
+const qtBlobs = {};
+
+let qtPendingFile = null;
+
+
+function qtLoad() {
+
+  try {
+
+    const c =
+      localStorage.getItem(
+        'quorix_channel'
+      );
+
+    const v =
+      localStorage.getItem(
+        'quorix_videos'
+      );
+
+    qtChannelData =
+      c ? JSON.parse(c) : null;
+
+    qtVideos =
+      v ? JSON.parse(v) : [];
+
+  } catch {
+
+    qtChannelData = null;
+    qtVideos = [];
+
+  }
+
+}
+
+
+function qtSaveChannel() {
+
+  try {
+
+    localStorage.setItem(
+      'quorix_channel',
+      JSON.stringify(qtChannelData)
+    );
+
+  } catch {}
+
+}
+
+
+function qtSaveVideos() {
+
+  try {
+
+    localStorage.setItem(
+      'quorix_videos',
+      JSON.stringify(qtVideos)
+    );
+
+  } catch {}
+
+}
+
+
+function qtRenderGrid() {
+
+  qtEmpty.style.display =
+    qtVideos.length
+      ? 'none'
+      : 'block';
+
+  qtGrid.innerHTML =
+    qtVideos
+      .slice()
+      .reverse()
+      .map(v => {
+
+        const blob =
+          qtBlobs[v.id];
+
+        const media = blob
+
+          ? `<video src="${blob}" controls preload="metadata"></video>`
+
+          : `
+            <div class="qt-thumb-empty">
+              Video unavailable after reload — this browser tab isn't
+              storing the actual file, only its title. Re-publish to watch
+              it again.
+            </div>
+          `;
+
+        return `
+
+          <div class="qt-card">
+
+            ${media}
+
+            <p class="qt-title">
+              ${v.title}
+            </p>
+
+            <p class="qt-meta">
+              ${qtChannelData.name} · ${v.date}
+            </p>
+
+          </div>
+
+        `;
+
+      })
+      .join('');
+
+  if (
+    qtSearchView.classList.contains('active')
+  ) {
+
+    qtRenderSearchResults(
+      qtSearchInput.value
+    );
+
+  }
+
+}
+
+
+function qtRenderSearchResults(query = '') {
+
+  const q =
+    query.trim().toLowerCase();
+
+  const matches =
+    q
+
+      ? qtVideos.filter(v =>
+          `${v.title} ${qtChannelData?.name || ''}`
+            .toLowerCase()
+            .includes(q)
+        )
+
+      : [];
+
+  qtSearchEmpty.style.display =
+    matches.length
+      ? 'none'
+      : 'block';
+
+  if (!q) {
+
+    qtSearchEmpty.textContent =
+      'Enter a search to find videos.';
+
+    qtSearchResults.innerHTML = '';
+
+    return;
+
+  }
+
+  qtSearchEmpty.textContent =
+    matches.length
+      ? ''
+      : 'No videos matched your search.';
+
+  qtSearchResults.innerHTML =
+    matches
+      .slice()
+      .reverse()
+      .map(v => {
+
+        const blob =
+          qtBlobs[v.id];
+
+        const media = blob
+
+          ? `<video src="${blob}" controls preload="metadata"></video>`
+
+          : `<div class="qt-search-thumb-empty"></div>`;
+
+        return `
+
+          <div class="qt-search-card">
+
+            ${media}
+
+            <div class="qt-search-info">
+
+              <p class="qt-title">
+                ${v.title}
+              </p>
+
+              <p class="qt-meta">
+                ${qtChannelData?.name || 'Quarktion'} · ${v.date}
+              </p>
+
+              <p class="qt-meta">
+                Video saved in this browser session.
+              </p>
+
+            </div>
+
+          </div>
+
+        `;
+
+      })
+      .join('');
+
+}
+
+
+function qtSetView(view) {
+
+  const search =
+    view === 'search';
+
+  qtVideosView.classList.toggle(
+    'active',
+    !search
+  );
+
+  qtSearchView.classList.toggle(
+    'active',
+    search
+  );
+
+  qtVideosTab.classList.toggle(
+    'active',
+    !search
+  );
+
+  qtSearchTab.classList.toggle(
+    'active',
+    search
+  );
+
+  if (search) {
+
+    qtSearchInput.focus();
+
+    qtRenderSearchResults(
+      qtSearchInput.value
+    );
+
+  }
+
+}
+
+
+qtVideosTab.addEventListener(
+  'click',
+  () => qtSetView('videos')
+);
+
+
+qtSearchTab.addEventListener(
+  'click',
+  () => qtSetView('search')
+);
+
+
+qtSearchForm.addEventListener(
+  'submit',
+  e => {
+
+    e.preventDefault();
+
+    qtRenderSearchResults(
+      qtSearchInput.value
+    );
+
+  }
+);
+
+
+function showQtube() {
+
+  qtLoad();
+
+  qtSetView('videos');
+
+  if (
+    qtChannelData &&
+    qtChannelData.name
+  ) {
+
+    qtAccount.style.display =
+      'none';
+
+    qtChannel.style.display =
+      'block';
+
+    qtChannelName.textContent =
+      qtChannelData.name;
+
+    qtRenderGrid();
+
+  } else {
+
+    qtAccount.style.display =
+      'block';
+
+    qtChannel.style.display =
+      'none';
+
+  }
+
+  addrText.textContent =
+    'quorix://quarktion.quorix';
+
+  openNewTab.style.display =
+    'none';
+
+  siteFrame.style.display =
+    'none';
+
+  frameNote.style.display =
+    'none';
+
+  qtube.style.display =
+    'block';
+
+}
+
+
+function hideQtube() {
+
+  qtube.style.display =
+    'none';
+
+  siteFrame.style.display =
+    'block';
+
+  frameNote.style.display =
+    'block';
+
+}
+
+
+document
+  .getElementById('qtCreateAccount')
+  .addEventListener(
+    'click',
+    () => {
+
+      const name =
+        qtChannelInput.value.trim();
+
+      if (!name) {
+
+        qtChannelInput.focus();
+
+        return;
+
+      }
+
+      qtChannelData = {
+        name
+      };
+
+      qtSaveChannel();
+
+      showQtube();
+
+    }
+  );
+
+
+document
+  .getElementById('openStudio')
+  .addEventListener(
+    'click',
+    () => {
+
+      qtTitleInput.value = '';
+
+      qtFileName.textContent = '';
+
+      qtPendingFile = null;
+
+      qtFileInput.value = '';
+
+      qtOverlay.classList.add('open');
+
+    }
+  );
+
+
+document
+  .getElementById('qtCancel')
+  .addEventListener(
+    'click',
+    () => qtOverlay.classList.remove('open')
+  );
+
+
+qtOverlay.addEventListener(
+  'click',
+  e => {
+
+    if (e.target === qtOverlay) {
+
+      qtOverlay.classList.remove('open');
+
+    }
+
+  }
+);
+
+
+qtFileDrop.addEventListener(
+  'click',
+  () => qtFileInput.click()
+);
+
+
+qtFileInput.addEventListener(
+  'change',
+  () => {
+
+    qtPendingFile =
+      qtFileInput.files[0] || null;
+
+    qtFileName.textContent =
+      qtPendingFile
+        ? qtPendingFile.name
+        : '';
+
+  }
+);
+
+
+document
+  .getElementById('qtPublish')
+  .addEventListener(
+    'click',
+    () => {
+
+      const title =
+        qtTitleInput.value.trim();
+
+      if (!title) {
+
+        qtTitleInput.focus();
+
+        return;
+
+      }
+
+      if (!qtPendingFile) {
+
+        qtFileDrop.focus();
+
+        return;
+
+      }
+
+      const id =
+        'v' + Date.now();
+
+      qtBlobs[id] =
+        URL.createObjectURL(
+          qtPendingFile
+        );
+
+      qtVideos.push({
+
+        id,
+
+        title,
+
+        date: 'just now'
+
+      });
+
+      qtSaveVideos();
+
+      qtRenderGrid();
+
+      qtOverlay.classList.remove(
+        'open'
+      );
+
+    }
+  );
+
+
+/* =========================================================
+   SETTINGS / THEMES
+========================================================= */
+
+const settingsDock =
+  document.getElementById('settingsDock');
+
+const settingsToggle =
+  document.getElementById('settingsToggle');
+
+const settingsOverlay =
+  document.getElementById('settingsOverlay');
+
+const settingsClose =
+  document.getElementById('settingsClose');
+
+const themeOptions =
+  Array.from(
+    document.querySelectorAll('.theme-option')
+  );
+
+let currentTheme = 'system';
+
+
+function applyTheme(
+  theme,
+  persist = true
+) {
+
+  currentTheme =
+    [
+      'system',
+      'light',
+      'dark',
+      'midnight',
+      'ocean',
+      'purple',
+      'sunset',
+      'rose',
+      'forest'
+    ].includes(theme)
+
+      ? theme
+
+      : 'system';
+
+
+  if (currentTheme === 'system') {
+
+    document.documentElement
+      .removeAttribute('data-theme');
+
+  } else {
+
+    document.documentElement
+      .setAttribute(
+        'data-theme',
+        currentTheme
+      );
+
+  }
+
+
+  themeOptions.forEach(btn => {
+
+    btn.classList.toggle(
+      'active',
+      btn.dataset.themeChoice ===
+        currentTheme
+    );
+
+  });
+
+
+  if (persist) {
+
+    try {
+
+      localStorage.setItem(
+        'quorix_theme',
+        currentTheme
+      );
+
+    } catch {}
+
+  }
+
+}
+
+
+function setSettingsMenu(open) {
+
+  settingsOverlay.classList.toggle(
+    'open',
+    open
+  );
+
+  settingsToggle.classList.toggle(
+    'active',
+    open
+  );
+
+  settingsToggle.setAttribute(
+    'aria-expanded',
+    String(open)
+  );
+
+  settingsOverlay.setAttribute(
+    'aria-hidden',
+    String(!open)
+  );
+
+  if (open) {
+
+    settingsClose.focus();
+
+  }
+
+}
+
+
+settingsToggle.addEventListener(
+  'click',
+  () => {
+
+    setSettingsMenu(
+      !settingsOverlay.classList.contains('open')
+    );
+
+  }
+);
+
+
+settingsClose.addEventListener(
+  'click',
+  () => setSettingsMenu(false)
+);
+
+
+settingsOverlay.addEventListener(
+  'click',
+  e => {
+
+    if (e.target === settingsOverlay) {
+
+      setSettingsMenu(false);
+
+    }
+
+  }
+);
+
+
+document.addEventListener(
+  'keydown',
+  e => {
+
+    if (
+      e.key === 'Escape' &&
+      settingsOverlay.classList.contains('open')
+    ) {
+
+      setSettingsMenu(false);
+
+    }
+
+  }
+);
+
+
+themeOptions.forEach(btn => {
+
+  btn.addEventListener(
+    'click',
+    () => applyTheme(
+      btn.dataset.themeChoice
+    )
+  );
+
+});
+
+
+try {
+
+  applyTheme(
+    localStorage.getItem('quorix_theme') ||
+      'system',
+    false
+  );
+
+} catch {
+
+  applyTheme(
+    'system',
+    false
+  );
+
+}
+
+
+/* =========================================================
+   SAVE / IMPORT
+========================================================= */
+
+const saveDock =
+  document.getElementById('saveDock');
+
+const saveToggle =
+  document.getElementById('saveToggle');
+
+const exportSaveBtn =
+  document.getElementById('exportSaveBtn');
+
+const importSaveBtn =
+  document.getElementById('importSaveBtn');
+
+const importSaveInput =
+  document.getElementById('importSaveInput');
+
+const saveStatus =
+  document.getElementById('saveStatus');
+
+
+saveToggle.addEventListener(
+  'click',
+  () => {
+
+    const open =
+      saveDock.classList.toggle(
+        'open'
+      );
+
+    saveToggle.setAttribute(
+      'aria-expanded',
+      String(open)
+    );
+
+  }
+);
+
+
+function getSaveData() {
+
+  return {
+
+    app: 'Quorix',
+
+    version: 1,
+
+    exportedAt:
+      new Date().toISOString(),
+
+    tabs: tabs.map(t => ({
+
+      id:
+        String(t.id || ''),
+
+      title:
+        String(t.title || 'New Tab'),
+
+      url:
+        String(t.url || ''),
+
+      internal:
+        Boolean(t.internal)
+
+    })),
+
+    activeTabId:
+      activeTabId
+        ? String(activeTabId)
+        : null,
+
+    tabCounter:
+      Number.isFinite(tabCounter)
+        ? tabCounter
+        : 0,
+
+    theme:
+      currentTheme,
+
+    history:
+      quorixHistory,
+
+    quarktion: {
+
+      channel:
+        qtChannelData,
+
+      videos:
+        Array.isArray(qtVideos)
+          ? qtVideos
+          : []
+
+    }
+
+  };
+
+}
+
+
+function downloadText(
+  filename,
+  text,
+  type = 'application/json'
+) {
+
+  const blob =
+    new Blob(
+      [text],
+      {type}
+    );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const a =
+    document.createElement('a');
+
+  a.href = url;
+
+  a.download =
+    filename;
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
+
+  setTimeout(
+    () => URL.revokeObjectURL(url),
+    1000
+  );
+
+}
+
+
+exportSaveBtn.addEventListener(
+  'click',
+  () => {
+
+    try {
+
+      const data =
+        getSaveData();
+
+      const stamp =
+        new Date()
+          .toISOString()
+          .replace(/[:.]/g,'-');
+
+      downloadText(
+        `quorix-save-${stamp}.json`,
+        JSON.stringify(
+          data,
+          null,
+          2
+        )
+      );
+
+      saveStatus.textContent =
+        'Save exported.';
+
+    } catch {
+
+      saveStatus.textContent =
+        'Export failed.';
+
+    }
+
+  }
+);
+
+
+importSaveBtn.addEventListener(
+  'click',
+  () => importSaveInput.click()
+);
+
+
+importSaveInput.addEventListener(
+  'change',
+  async () => {
+
+    const file =
+      importSaveInput.files &&
+      importSaveInput.files[0];
+
+    importSaveInput.value = '';
+
+    if (!file) return;
+
+    try {
+
+      const raw =
+        await file.text();
+
+      const data =
+        JSON.parse(raw);
+
+      if (
+        !data ||
+        data.app !== 'Quorix' ||
+        !Array.isArray(data.tabs)
+      ) {
+
+        throw new Error(
+          'Invalid save file'
+        );
+
+      }
+
+
+      const importedTabs =
+        data.tabs.map(
+          (t,i) => ({
+
+            id:
+              String(
+                t.id ||
+                `tab-${i + 1}`
+              ),
+
+            title:
+              String(
+                t.title ||
+                'New Tab'
+              ).slice(0,60),
+
+            url:
+              String(
+                t.url || ''
+              ),
+
+            internal:
+              Boolean(t.internal)
+
+          })
+        );
+
+
+      tabs =
+        importedTabs.length
+
+          ? importedTabs
+
+          : [
+              {
+                id:'tab-1',
+                title:'New Tab',
+                url:'',
+                internal:false
+              }
+            ];
+
+
+      tabCounter =
+        Math.max(
+          Number(data.tabCounter) || 0,
+          tabs.length
+        );
+
+
+      activeTabId =
+        tabs.some(
+          t =>
+            t.id ===
+            String(data.activeTabId)
+        )
+
+          ? String(data.activeTabId)
+
+          : tabs[0].id;
+
+
+      if (data.theme) {
+
+        applyTheme(
+          data.theme
+        );
+
+      }
+
+
+      /* Import history */
+
+      if (
+        Array.isArray(data.history)
+      ) {
+
+        quorixHistory =
+          data.history
+            .filter(
+              item =>
+                item &&
+                item.url
+            )
+            .slice(0,100);
+
+        saveHistory();
+
+      }
+
+
+      /* Import Quarktion */
+
+      if (
+        data.quarktion &&
+        typeof data.quarktion === 'object'
+      ) {
+
+        qtChannelData =
+          data.quarktion.channel ||
+          null;
+
+        qtVideos =
+          Array.isArray(
+            data.quarktion.videos
+          )
+
+            ? data.quarktion.videos
+
+            : [];
+
+        qtSaveChannel();
+
+        qtSaveVideos();
+
+        qtRenderGrid();
+
+      }
+
+
+      renderTabs();
+
+      switchTab(
+        activeTabId
+      );
+
+      saveStatus.textContent =
+        'Save imported.';
+
+    } catch {
+
+      saveStatus.textContent =
+        'Invalid Quorix JSON file.';
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   BROWSER TABS
+========================================================= */
+
+const tabsBar =
+  document.getElementById('tabsBar');
+
+const newTabBtn =
+  document.getElementById('newTabBtn');
+
+let tabs = [];
+
+let activeTabId = null;
+
+let tabCounter = 0;
+
+
+function tabTitle(v) {
+
+  if (!v) {
+    return 'New Tab';
+  }
+
+  if (
+    v.startsWith('quorix://')
+  ) {
+
+    return v.slice(9);
+
+  }
+
+  try {
+
+    return new URL(v)
+      .hostname
+      .replace(/^www\./,'')
+
+      || 'Tab';
+
+  } catch {
+
+    return v.slice(0,22);
+
+  }
+
+}
+
+
+function renderTabs() {
+
+  tabsBar
+    .querySelectorAll('.tab')
+    .forEach(
+      e => e.remove()
+    );
+
+
+  tabs.forEach(t => {
+
+    const e =
+      document.createElement('div');
+
+    e.className =
+      'tab' +
+      (
+        t.id === activeTabId
+          ? ' active'
+          : ''
+      );
+
+
+    const title =
+      document.createElement('span');
+
+    title.className =
+      'tab-title';
+
+    title.textContent =
+      t.title;
+
+
+    const c =
+      document.createElement('button');
+
+    c.className =
+      'tab-close';
+
+    c.type =
+      'button';
+
+    c.textContent =
+      '×';
+
+    c.title =
+      'Close tab';
+
+
+    c.onclick =
+      x => {
+
+        x.stopPropagation();
+
+        closeTab(t.id);
+
+      };
+
+
+    e.append(
+      title,
+      c
+    );
+
+
+    e.onclick =
+      () => switchTab(t.id);
+
+
+    tabsBar.insertBefore(
+      e,
+      newTabBtn
+    );
+
+  });
+
+}
+
+
+function createTab() {
+
+  const id =
+    'tab-' +
+    (++tabCounter);
+
+  tabs.push({
+
+    id,
+
+    title:'New Tab',
+
+    url:'',
+
+    internal:false
+
+  });
+
+  activeTabId =
+    id;
+
+  renderTabs();
+
+  showNewTabPage();
+
+}
+
+
+function showNewTabPage() {
+
+  browserView.style.display =
+    'none';
+
+  home.style.display =
+    'flex';
+
+  hideQtube();
+
+  siteFrame.src =
+    'about:blank';
+
+  searchInput.value =
+    '';
+
+  navStatus.textContent =
+    '';
+
+  searchInput.focus();
+
+}
+
+
+function switchTab(id) {
+
+  const t =
+    tabs.find(
+      x => x.id === id
+    );
+
+  if (!t) return;
+
+  activeTabId =
+    id;
+
+  renderTabs();
+
+
+  if (!t.url) {
+
+    showNewTabPage();
+
+    return;
+
+  }
+
+
+  home.style.display =
+    'none';
+
+  browserView.style.display =
+    'flex';
+
+
+  if (t.internal) {
+
+    showQtube();
+
+  } else {
+
+    navigate(
+      t.url,
+      true
+    );
+
+  }
+
+}
+
+
+function closeTab(id) {
+
+  const i =
+    tabs.findIndex(
+      x => x.id === id
+    );
+
+  if (i < 0) return;
+
+
+  const active =
+    activeTabId === id;
+
+  tabs.splice(
+    i,
+    1
+  );
+
+
+  if (!tabs.length) {
+
+    createTab();
+
+    return;
+
+  }
+
+
+  if (active) {
+
+    activeTabId =
+      tabs[
+        Math.max(
+          0,
+          i - 1
+        )
+      ].id;
+
+    switchTab(
+      activeTabId
+    );
+
+  } else {
+
+    renderTabs();
+
+  }
+
+}
+
+
+newTabBtn.addEventListener(
+  'click',
+  createTab
+);
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+const INTERNAL_ROUTES = {
+
+  'quarktion.quorix':
+    showQtube
+
+};
+
+
+function navigate(
+  v,
+  restoring = false
+) {
+
+  v =
+    v.trim();
+
+  if (!v) return;
+
+
+  /* Add to history unless restoring an existing tab */
+
+  if (!restoring) {
+
+    addHistory(v);
+
+  }
+
+
+  hideQtube();
+
+
+  const currentTab =
+    tabs.find(
+      t =>
+        t.id ===
+        activeTabId
+    );
+
+
+  if (
+    currentTab &&
+    !restoring
+  ) {
+
+    currentTab.url =
+      v;
+
+    currentTab.title =
+      tabTitle(v);
+
+    currentTab.internal =
+      false;
+
+    renderTabs();
+
+  }
+
+
+  const routeMatch =
+    INTERNAL_ROUTES[
+      v
+        .toLowerCase()
+        .replace(
+          /^https?:\/\//i,
+          ''
+        )
+        .replace(
+          /\/$/,
+          ''
+        )
+    ];
+
+
+  if (routeMatch) {
+
+    const currentTab =
+      tabs.find(
+        t =>
+          t.id ===
+          activeTabId
+      );
+
+
+    if (currentTab) {
+
+      currentTab.url =
+        'quorix://' +
+        v
+          .toLowerCase()
+          .replace(
+            /^https?:\/\//i,
+            ''
+          )
+          .replace(
+            /\/$/,
+            ''
+          );
+
+      currentTab.title =
+        tabTitle(
+          currentTab.url
+        );
+
+      currentTab.internal =
+        true;
+
+      renderTabs();
+
+    }
+
+
+    home.style.display =
+      'none';
+
+    browserView.style.display =
+      'flex';
+
+    routeMatch();
+
+    return;
+
+  }
+
+
+  const url =
+    looksLikeUrl(v)
+
+      ? (
+          /^https?:\/\//i.test(v)
+            ? v
+            : 'https://' + v
+        )
+
+      : null;
+
+
+  if (url) {
+
+    /* .com websites open externally */
+
+    try {
+
+      const host =
+        new URL(url)
+          .hostname
+          .toLowerCase();
+
+
+      if (
+        host.endsWith('.com')
+      ) {
+
+        window.open(
+          url,
+          '_blank',
+          'noopener,noreferrer'
+        );
+
+        return;
+
+      }
+
+    } catch {}
+
+
+    const currentTab =
+      tabs.find(
+        t =>
+          t.id ===
+          activeTabId
+      );
+
+
+    if (currentTab) {
+
+      currentTab.url =
+        url;
+
+      currentTab.title =
+        tabTitle(url);
+
+      currentTab.internal =
+        false;
+
+      renderTabs();
+
+    }
+
+
+    addrText.textContent =
+      url;
+
+    openNewTab.href =
+      url;
+
+    home.style.display =
+      'none';
+
+    browserView.style.display =
+      'flex';
+
+
+    frameNote.textContent =
+      'Loading…';
+
+
+    let loaded = false;
+
+
+    siteFrame.onload =
+      () => {
+
+        loaded = true;
+
+        frameNote.textContent =
+          '';
+
+      };
+
+
+    siteFrame.src =
+      url;
+
+
+    setTimeout(
+      () => {
+
+        if (!loaded) {
+
+          frameNote.innerHTML =
+            'This site blocks embedding on outside pages. ' +
+            '<a href="' +
+            url +
+            '">Open it ↗</a>';
+
+        }
+
+      },
+      2500
+    );
+
+
+  } else {
+
+    addrText.textContent =
+      'Search: ' + v;
+
+    openNewTab.href =
+      '#';
+
+    siteFrame.src =
+      'about:blank';
+
+    frameNote.textContent =
+      'Enter an embeddable website address, such as wikipedia.org or example.com.';
+
+    home.style.display =
+      'none';
+
+    browserView.style.display =
+      'flex';
+
+  }
+
+}
+
+
+/* Search */
+
+searchForm.addEventListener(
+  'submit',
+  e => {
+
+    e.preventDefault();
+
+    navigate(
+      searchInput.value
+    );
+
+  }
+);
+
+
+/* Quick links */
+
+document
+  .querySelectorAll('.quicklink')
+  .forEach(el => {
+
+    el.addEventListener(
+      'click',
+      e => {
+
+        e.preventDefault();
+
+        navigate(
+          el.dataset.url
+        );
+
+      }
+    );
+
+  });
+
+
+/* Back */
+
+backBtn.addEventListener(
+  'click',
+  () => {
+
+    const t =
+      tabs.find(
+        x =>
+          x.id ===
+          activeTabId
+      );
+
+
+    if (t) {
+
+      t.url =
+        '';
+
+      t.title =
+        'New Tab';
+
+      t.internal =
+        false;
+
+      renderTabs();
+
+    }
+
+
+    showNewTabPage();
+
+  }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+createTab();
+
+</script>
+
+</body>
+</html>
